@@ -10,8 +10,15 @@ trait_sub<-trait_summ[,c("project",
                          "trait_n_perc")]
 
 trait_sub$scientific_name<-as.character(trait_sub$scientific_name)
+trait_sub$scientific_name[trait_sub$scientific_name=="Abildgaardieae"]<-"Abildgaardieae Ignore"
+
 trait_sp_split<-strsplit(trait_sub$scientific_name,split=" ")
-trait_sub$genus<-unlist(lapply(trait_sp_split))
+trait_sub$genus<-unlist(lapply(trait_sp_split,function(el) el[[1]]))
+trait_sub$species<-unlist(lapply(trait_sp_split,function(el) el[[2]]))
+trait_sub$species[which(trait_sub$species!=tolower(trait_sub$species))]<-NA
 
 ###################################
 ##
+
+ref_traits<-readRDS("../FreshLeafModels/ProcessedSpectra/all_ref_and_traits.rds")
+ref_meta<-meta(ref_traits)
