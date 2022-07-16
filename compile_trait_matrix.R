@@ -51,6 +51,7 @@ TRY_N$species<-unlist(lapply(TRY_N_sp,function(el){
   } else{
     return(NA)
   }}))
+TRY_N$binomial<-paste(TRY_N$genus,TRY_N$species,sep=" ")
 
 TRY_SLA<-read.csv("../FreshLeafModels/TraitData/TRY/TRY_SLA.csv")
 TRY_SLA_sp<-strsplit(as.character(TRY_SLA$SpeciesName),split=" ")
@@ -61,6 +62,7 @@ TRY_SLA$species<-unlist(lapply(TRY_SLA_sp,function(el){
   } else{
     return(NA)
   }}))
+TRY_SLA$binomial<-paste(TRY_SLA$genus,TRY_SLA$species,sep=" ")
 
 TRY_LDMC<-read.csv("../FreshLeafModels/TraitData/TRY/TRY_LDMC.csv")
 TRY_LDMC_sp<-strsplit(as.character(TRY_LDMC$SpeciesName),split=" ")
@@ -71,6 +73,7 @@ TRY_LDMC$species<-unlist(lapply(TRY_LDMC_sp,function(el){
   } else{
     return(NA)
   }}))
+TRY_LDMC$binomial<-paste(TRY_LDMC$genus,TRY_LDMC$species,sep=" ")
 
 #########################################
 ## attach data to matrix
@@ -78,8 +81,14 @@ TRY_LDMC$species<-unlist(lapply(TRY_LDMC_sp,function(el){
 for(i in 1:nrow(trait_sub)){
   
   ## fill in N
-  if(is.na(trait_sub$trait_n_perc)){
-    
+  if(is.na(trait_sub$trait_n_perc[i])){
+    CABO_match<-match(trait_sub$scientific_name[i],ref_meta_agg$Group.1)
+    if(!is.na(CABO_match)){
+      trait_sub$N_CABO<-ref_meta_agg$Nmass[CABO_match]
+      else{
+        TRY_Nsp_match<-which(TRY_N$bi)
+      }
+    }
   }
     
   ## fill in LMC
