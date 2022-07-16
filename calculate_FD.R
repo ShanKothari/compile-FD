@@ -1,7 +1,9 @@
 setwd("C:/Users/kotha020/Dropbox/PostdocProjects/WallisFunctionalTraits/")
 
 trait_matrix<-read.csv("filled_trait_matrix.csv")
-all_traits_site<-which(!is.na(trait_matrix$) & !is.na(trait_matrix$LMA_site) & !is.na(trait_matrix$LDMC_site))
+all_traits_site<-which(!is.na(trait_matrix$trait_n_perc) & 
+                         !is.na(trait_matrix$trait_leaf_mass_per_area_g_m2) & 
+                         !is.na(trait_matrix$trait_leaf_dry_matter_content_mg_g))
 all_traits_CABO<-which(!is.na(trait_matrix$N_CABO) & !is.na(trait_matrix$LMA_CABO) & !is.na(trait_matrix$LDMC_CABO))
 all_traits_sp<-which(!is.na(trait_matrix$N_TRYsp) & !is.na(trait_matrix$LMA_TRYsp) & !is.na(trait_matrix$LDMC_TRYsp))
 all_traits_gn<-which(!is.na(trait_matrix$N_TRYgn) & !is.na(trait_matrix$LMA_TRYgn) & !is.na(trait_matrix$LDMC_TRYgn))
