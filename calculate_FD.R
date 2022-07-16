@@ -1,16 +1,21 @@
 setwd("C:/Users/kotha020/Dropbox/PostdocProjects/WallisFunctionalTraits/")
 
 trait_matrix<-read.csv("filled_trait_matrix.csv")
+
+## create sp x project codes
+## this allows us to use the best (most specific) possible
+## trait data for species in each site
+trait_matrix$sp_project<-paste(trait_matrix$binomial,trait_matrix$project,sep="_")
+
+## remove all rows with NAs in our target traits
 all_traits_site<-which(!is.na(trait_matrix$trait_n_perc) & 
                          !is.na(trait_matrix$trait_leaf_mass_per_area_g_m2) & 
                          !is.na(trait_matrix$trait_leaf_dry_matter_content_mg_g))
 all_traits_CABO<-which(!is.na(trait_matrix$N_CABO) & !is.na(trait_matrix$LMA_CABO) & !is.na(trait_matrix$LDMC_CABO))
 all_traits_sp<-which(!is.na(trait_matrix$N_TRYsp) & !is.na(trait_matrix$LMA_TRYsp) & !is.na(trait_matrix$LDMC_TRYsp))
 all_traits_gn<-which(!is.na(trait_matrix$N_TRYgn) & !is.na(trait_matrix$LMA_TRYgn) & !is.na(trait_matrix$LDMC_TRYgn))
-
-## remove all rows with NAs in our target traits
+## allowing up to genus-level TRY traits (most permissive)
 trait_matrix<-trait_matrix[all_traits_gn,]
-trait_matrix$sp_project<-paste(trait_matrix$binomial,trait_matrix$project,sep="_")
 
 ## log-transform LMA and N to reduce skewness
 ## since differences may be less important at the upper tail
@@ -37,6 +42,8 @@ sp_matrix$proj_code<-NA
 sp_matrix$proj_code[sp_matrix$project=="Pool-Boucherville"]<-"IGB"
 sp_matrix$proj_code[sp_matrix$project=="2018-Hacker-PhD-UBC"]<-"CGOP"
 sp_matrix$proj_code[sp_matrix$project=="2019-MerBleue"]<-"MB"
+## remove 2018 and 2019 (non-pooled) Boucherville
+sp_matrix<-sp_matrix[-which(is.na(sp_matrix$proj_code)),]
 
 ## deal with taxon not IDed to genus
 sp_matrix$scientific_name<-as.character(sp_matrix$scientific_name)
@@ -50,4 +57,4 @@ sp_matrix$species[which(sp_matrix$species!=tolower(sp_matrix$species))]<-NA
 sp_matrix$binomial<-paste(sp_matrix$genus,sp_matrix$species,sep=" ")
 
 ## create species x project ID
-sp_matrix$sp_project<-paste(sp_matrix$binomial,sp_matrix$project,sep="_")
+sp_matrix$sp_project<-paste(sp_matrix$binomial,sp_matrix$proj_code,sep="_")
