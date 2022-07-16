@@ -49,7 +49,7 @@ TRY_N$species<-unlist(lapply(TRY_N_sp,function(el){
   if(length(el)>1){
     return(el[[2]])
   } else{
-    return(NA)
+    return("")
   }}))
 TRY_N$binomial<-paste(TRY_N$genus,TRY_N$species,sep=" ")
 
@@ -60,7 +60,7 @@ TRY_SLA$species<-unlist(lapply(TRY_SLA_sp,function(el){
   if(length(el)>1){
     return(el[[2]])
   } else{
-    return(NA)
+    return("")
   }}))
 TRY_SLA$binomial<-paste(TRY_SLA$genus,TRY_SLA$species,sep=" ")
 
@@ -71,7 +71,7 @@ TRY_LDMC$species<-unlist(lapply(TRY_LDMC_sp,function(el){
   if(length(el)>1){
     return(el[[2]])
   } else{
-    return(NA)
+    return("")
   }}))
 TRY_LDMC$binomial<-paste(TRY_LDMC$genus,TRY_LDMC$species,sep=" ")
 
@@ -107,39 +107,41 @@ for(i in 1:nrow(trait_sub)){
   ## now if N_TRYsp is still missing we fill from TRY
   if(is.na(trait_sub$N_TRYsp[i])){
     TRY_N_matchsp<-which(TRY_N$binomial==trait_sub$binomial[i])
-    trait_sub$N_TRYsp<-mean(TRY_N$StdValue[TRY_N_matchsp]/10,na.rm=T)
-    trait_sub$N_TRYgn<-mean(TRY_N$StdValue[TRY_N_matchsp]/10,na.rm=T)
+    trait_sub$N_TRYsp[i]<-mean(TRY_N$StdValue[TRY_N_matchsp]/10,na.rm=T)
+    trait_sub$N_TRYgn[i]<-mean(TRY_N$StdValue[TRY_N_matchsp]/10,na.rm=T)
   }
   
   ## now if LMA_TRYsp is still missing we fill from TRY
   if(is.na(trait_sub$LMA_TRYsp[i])){
     TRY_SLA_matchsp<-which(TRY_SLA$binomial==trait_sub$binomial[i])
-    trait_sub$LMA_TRYsp<-mean(1000/TRY_SLA$StdValue[TRY_SLA_matchsp],na.rm=T)
-    trait_sub$LMA_TRYgn<-mean(1000/TRY_SLA$StdValue[TRY_SLA_matchsp],na.rm=T)
+    trait_sub$LMA_TRYsp[i]<-mean(1000/TRY_SLA$StdValue[TRY_SLA_matchsp],na.rm=T)
+    trait_sub$LMA_TRYgn[i]<-mean(1000/TRY_SLA$StdValue[TRY_SLA_matchsp],na.rm=T)
   }
   
   ## now if LDMC_TRYsp is still missing we fill from TRY
   if(is.na(trait_sub$LDMC_TRYsp[i])){
     TRY_LDMC_matchsp<-which(TRY_LDMC$binomial==trait_sub$binomial[i])
-    trait_sub$LDMC_TRYsp<-mean(1000*TRY_LDMC$StdValue[TRY_LDMC_matchsp],na.rm=T)
-    trait_sub$LDMC_TRYgn<-mean(1000*TRY_LDMC$StdValue[TRY_LDMC_matchsp],na.rm=T)
+    trait_sub$LDMC_TRYsp[i]<-mean(1000*TRY_LDMC$StdValue[TRY_LDMC_matchsp],na.rm=T)
+    trait_sub$LDMC_TRYgn[i]<-mean(1000*TRY_LDMC$StdValue[TRY_LDMC_matchsp],na.rm=T)
   }
   
   ## now if N_TRYgn is still missing we fill from TRY
   if(is.na(trait_sub$N_TRYgn[i])){
     TRY_N_matchgn<-which(TRY_N$genus==trait_sub$genus[i])
-    trait_sub$N_TRYgn<-mean(TRY_N$StdValue[TRY_N_matchgn]/10,na.rm=T)
+    trait_sub$N_TRYgn[i]<-mean(TRY_N$StdValue[TRY_N_matchgn]/10,na.rm=T)
   }
   
   ## now if LMA_TRYgn is still missing we fill from TRY
   if(is.na(trait_sub$LMA_TRYgn[i])){
     TRY_SLA_matchgn<-which(TRY_SLA$genus==trait_sub$genus[i])
-    trait_sub$LMA_TRYgn<-mean(1000/TRY_SLA$StdValue[TRY_SLA_matchgn],na.rm=T)
+    trait_sub$LMA_TRYgn[i]<-mean(1000/TRY_SLA$StdValue[TRY_SLA_matchgn],na.rm=T)
   }
   
   ## now if LDMC_TRYgn is still missing we fill from TRY
   if(is.na(trait_sub$LDMC_TRYgn[i])){
     TRY_LDMC_matchgn<-which(TRY_LDMC$genus==trait_sub$genus[i])
-    trait_sub$LDMC_TRYgn<-mean(1000*TRY_LDMC$StdValue[TRY_LDMC_matchgn],na.rm=T)
+    trait_sub$LDMC_TRYgn[i]<-mean(1000*TRY_LDMC$StdValue[TRY_LDMC_matchgn],na.rm=T)
   }
 }
+
+write.csv(trait_sub,"filled_trait_matrix.csv")
