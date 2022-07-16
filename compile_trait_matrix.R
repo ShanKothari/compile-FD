@@ -21,12 +21,12 @@ trait_sub$binomial<-paste(trait_sub$genus,trait_sub$species,sep=" ")
 trait_sub$N_CABO<-trait_sub$trait_n_perc
 trait_sub$N_TRYsp<-trait_sub$trait_n_perc
 trait_sub$N_TRYgn<-trait_sub$trait_n_perc
-trait_sub$LMA_CABO<-trait_sub$trait_LMA_perc
-trait_sub$LMA_TRYsp<-trait_sub$trait_LMA_perc
-trait_sub$LMA_TRYgn<-trait_sub$trait_LMA_perc
-trait_sub$LDMC_CABO<-trait_sub$trait_LDMC_perc
-trait_sub$LDMC_TRYsp<-trait_sub$trait_LDMC_perc
-trait_sub$LDMC_TRYgn<-trait_sub$trait_LDMC_perc
+trait_sub$LMA_CABO<-trait_sub$trait_leaf_mass_per_area_g_m2
+trait_sub$LMA_TRYsp<-trait_sub$trait_leaf_mass_per_area_g_m2
+trait_sub$LMA_TRYgn<-trait_sub$trait_leaf_mass_per_area_g_m2
+trait_sub$LDMC_CABO<-trait_sub$trait_leaf_dry_matter_content_mg_g
+trait_sub$LDMC_TRYsp<-trait_sub$trait_leaf_dry_matter_content_mg_g
+trait_sub$LDMC_TRYgn<-trait_sub$trait_leaf_dry_matter_content_mg_g
 
 ###################################
 ## read CABO data
@@ -78,18 +78,35 @@ TRY_LDMC$binomial<-paste(TRY_LDMC$genus,TRY_LDMC$species,sep=" ")
 #########################################
 ## attach data to matrix
 
+  
 for(i in 1:nrow(trait_sub)){
   
-  ## fill in N
-  if(is.na(trait_sub$trait_n_perc[i])){
-    CABO_match<-match(trait_sub$scientific_name[i],ref_meta_agg$Group.1)
-    if(!is.na(CABO_match)){
-      trait_sub$N_CABO<-ref_meta_agg$Nmass[CABO_match]
-      else{
-        TRY_Nsp_match<-which(TRY_N$bi)
-      }
-    }
+  CABO_match<-match(trait_sub$scientific_name[i],ref_meta_agg$Group.1)
+  
+  ## if N is missing, fill from CABO if possible
+  if(is.na(trait_sub$trait_n_perc[i]) & !is.na(CABO_match)){
+    trait_sub$N_CABO[i]<-ref_meta_agg$Nmass[CABO_match]
+    trait_sub$N_TRYsp[i]<-ref_meta_agg$Nmass[CABO_match]
+    trait_sub$N_TRYgn[i]<-ref_meta_agg$Nmass[CABO_match]
   }
-    
-  ## fill in LMC
+  
+  ## if LMA is missing, fill from CABO if possible
+  if(is.na(trait_sub$trait_leaf_mass_per_area_g_m2[i]) & !is.na(CABO_match)){
+    trait_sub$LMA_CABO[i]<-ref_meta_agg$LMA[CABO_match]*1000
+    trait_sub$LMA_TRYsp[i]<-ref_meta_agg$LMA[CABO_match]*1000
+    trait_sub$LMA_TRYgn[i]<-ref_meta_agg$LMA[CABO_match]*1000
+  }
+  
+  ## if LDMC is missing, fill from CABO if possible
+  if(is.na(trait_sub$trait_leaf_dry_matter_content_mg_g[i]) & !is.na(CABO_match)){
+    trait_sub$LDMC_CABO[i]<-ref_meta_agg$LDMC[CABO_match]
+    trait_sub$LDMC_TRYsp[i]<-ref_meta_agg$LDMC[CABO_match]
+    trait_sub$LDMC_TRYgn[i]<-ref_meta_agg$LDMC[CABO_match]
+  }
+
+  ## now if N_CABO is still missing we fill from TRY
+  if(is.na(trait_sub$N_CABO)){
+    TRY_N_matchsp<-which(TRY_N$binomial==trait_sub$binomial[i])
+    trait_sub$
+  }
 }
