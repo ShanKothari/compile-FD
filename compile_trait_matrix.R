@@ -144,4 +144,4 @@ for(i in 1:nrow(trait_sub)){
   }
 }
 
-write.csv(trait_sub,"filled_trait_matrix.csv")
+write.csv(trait_sub,"filled_trait_matrix.csv",row.names=F)
