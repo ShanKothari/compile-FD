@@ -85,6 +85,8 @@ sp_matrix_agg$binomial<-NULL
 sp_matrix_agg$proj_code<-NULL
 sp_matrix_agg$plot_field_id<-NULL
 
+## calculate what percent of species cover
+## we have trait data for
 sp_matrix_split<-split(sp_matrix_agg,f=list(sp_matrix_agg$plot_project))
 sp_coverage<-unlist(lapply(sp_matrix_split,function(plot_df){
   coverage<-sum(plot_df$abundance[plot_df$sp_project %in% trait_matrix$sp_project],na.rm=T)/sum(plot_df$abundance,na.rm=T)
@@ -137,6 +139,7 @@ FTD_df$project<-unlist(lapply(FTD_name_split,function(x) x[[2]]))
 ###########################
 ## Etienne's FD
 
+## abundance-weighted metrics
 FD_list<-dbFD(x = trait_dist,
               a = sp_matrix_wide,
               w.abun = T)
@@ -153,10 +156,10 @@ FD_df<-data.frame(names=names(FD_list$nbsp),
 ################################
 ## additional processing
 
-## are the rows arranged the same way?)
-
+## check: are the rows arranged the same way?
 sum(!(FD_df$names==rownames(FTD_df)))
 
+## combine data
 combined_df<-data.frame(FTD_df,
                         FD_df,
                         coverage=sp_coverage)
@@ -165,5 +168,4 @@ combined_df$nsp.1<-NULL
 ###################################
 ## write_data
 
-write.csv(FD_df,"FD.csv")
-write.csv(FTD_df,"FTD.csv")
+write.csv(combined_df,"functional_diversity.csv")
