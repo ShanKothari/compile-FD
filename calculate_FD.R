@@ -1,4 +1,4 @@
-setwd("C:/Users/kotha020/Dropbox/PostdocProjects/WallisFunctionalTraits/")
+setwd("C:/Users/querc/Dropbox/PostdocProjects/WallisFunctionalTraits/")
 
 library(reshape2)
 library(FD)
@@ -91,6 +91,10 @@ sp_matrix_split<-split(sp_matrix_agg,f=list(sp_matrix_agg$plot_project))
 sp_coverage<-unlist(lapply(sp_matrix_split,function(plot_df){
   coverage<-sum(plot_df$abundance[plot_df$sp_project %in% trait_matrix$sp_project],na.rm=T)/sum(plot_df$abundance,na.rm=T)
   return(coverage)}))
+
+## just for the purposes of tallying up what's missing
+sp_missing<-sp_matrix_agg[-which(sp_matrix_agg$sp_project %in% trait_matrix$sp_project),]
+sp_missing_agg<-aggregate(abundance~sp_project,data = sp_missing,FUN=sum)
 
 ## drop rows with species x project IDs not in trait_matrix
 sp_matrix_agg<-sp_matrix_agg[which(sp_matrix_agg$sp_project %in% trait_matrix$sp_project),]

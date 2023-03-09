@@ -1,8 +1,8 @@
 library(spectrolab)
 
-setwd("C:/Users/kotha020/Dropbox/PostdocProjects/WallisFunctionalTraits/")
+setwd("C:/Users/querc/Dropbox/PostdocProjects/WallisFunctionalTraits/")
 
-trait_summ<-read.csv("TraitsSpecies/Species_traits_by_projects.csv")
+trait_summ<-read.csv("TraitsSpecies/Species_traits_by_projects_selectedPlots.csv")
 trait_sub<-trait_summ[,c("project",
                          "scientific_name",
                          "trait_leaf_mass_per_area_g_m2",
@@ -39,7 +39,38 @@ ref_meta_agg<-aggregate(ref_meta[,c("LMA","LDMC","Nmass")],
                         FUN=mean,na.rm=T)
 
 ###################################
-## read TRY data
+## process additional SLA data from TRY
+
+# ## SLA with petiole, 3116 (TRY request 25397)
+# TRY_SLA_petiole<-read.table("TRY/TRYSLApetiole/25397.txt",
+#                       sep = "\t",fill=T,header=T,quote="",fileEncoding="latin1")
+# 
+# TRY_SLAp_sub<-TRY_SLA_petiole[which(TRY_SLA_petiole$TraitID %in% c(3116)),]
+# TRY_SLAp_sub$StdValue<-as.numeric(as.character(TRY_SLAp_sub$StdValue))
+# TRY_SLAp_sub$ErrorRisk<-as.numeric(as.character(TRY_SLAp_sub$ErrorRisk))
+# TRY_SLAp_sub<-TRY_SLAp_sub[!is.na(TRY_SLAp_sub$StdValue),]
+# TRY_SLAp_sub<-TRY_SLAp_sub[which(TRY_SLAp_sub$ErrorRisk<3),]
+# TRY_SLAp_sub<-TRY_SLAp_sub[,c("DatasetID","SpeciesName","AccSpeciesID","ObservationID",
+#                             "ObsDataID","TraitID","TraitName","StdValue","UnitName","ErrorRisk")]
+# 
+# write.csv(TRY_SLAp_sub,"TRY/TRY_SLAp.csv")
+# 
+# ## SLA indeterminate about petiole, 3117 (TRY request 25398)
+# TRY_SLA_ind<-read.table("TRY/TRYSLAindeterminate/25398.txt",
+#                             sep = "\t",fill=T,header=T,quote="",fileEncoding="latin1")
+# 
+# TRY_SLAi_sub<-TRY_SLA_ind[which(TRY_SLA_ind$TraitID %in% c(3117)),]
+# TRY_SLAi_sub$StdValue<-as.numeric(as.character(TRY_SLAi_sub$StdValue))
+# TRY_SLAi_sub$ErrorRisk<-as.numeric(as.character(TRY_SLAi_sub$ErrorRisk))
+# TRY_SLAi_sub<-TRY_SLAi_sub[!is.na(TRY_SLAi_sub$StdValue),]
+# TRY_SLAi_sub<-TRY_SLAi_sub[which(TRY_SLAi_sub$ErrorRisk<3),]
+# TRY_SLAi_sub<-TRY_SLAi_sub[,c("DatasetID","SpeciesName","AccSpeciesID","ObservationID",
+#                               "ObsDataID","TraitID","TraitName","StdValue","UnitName","ErrorRisk")]
+# 
+# write.csv(TRY_SLAi_sub,"TRY/TRY_SLAi.csv")
+
+###################################
+## read processed TRY data
 
 TRY_N<-read.csv("../FreshLeafModels/TraitData/TRY/TRY_N.csv")
 TRY_N<-TRY_N[-which(TRY_N$SpeciesName==""),]
@@ -53,7 +84,12 @@ TRY_N$species<-unlist(lapply(TRY_N_sp,function(el){
   }}))
 TRY_N$binomial<-paste(TRY_N$genus,TRY_N$species,sep=" ")
 
-TRY_SLA<-read.csv("../FreshLeafModels/TraitData/TRY/TRY_SLA.csv")
+TRY_SLA_np<-read.csv("../FreshLeafModels/TraitData/TRY/TRY_SLA.csv")
+TRY_SLA_p<-read.csv("TRY/TRY_SLAp.csv")
+TRY_SLA_i<-read.csv("TRY/TRY_SLAi.csv")
+TRY_SLA<-do.call(rbind,args=list(TRY_SLA_np,TRY_SLA_p,TRY_SLA_i))
+
+TRY_SLA<-TRY_SLA[-which(TRY_SLA$SpeciesName==""),]
 TRY_SLA_sp<-strsplit(as.character(TRY_SLA$SpeciesName),split=" ")
 TRY_SLA$genus<-unlist(lapply(TRY_SLA_sp,function(el) el[[1]]))
 TRY_SLA$species<-unlist(lapply(TRY_SLA_sp,function(el){
@@ -78,7 +114,6 @@ TRY_LDMC$binomial<-paste(TRY_LDMC$genus,TRY_LDMC$species,sep=" ")
 #########################################
 ## attach data to matrix
 
-  
 for(i in 1:nrow(trait_sub)){
   
   CABO_match<-match(trait_sub$scientific_name[i],ref_meta_agg$Group.1)
