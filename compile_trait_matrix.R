@@ -179,4 +179,45 @@ for(i in 1:nrow(trait_sub)){
   }
 }
 
+#################################################
+## manual fill-in
+
+trait_sub$N_all<-trait_sub$N_TRYgn
+trait_sub$LMA_all<-trait_sub$LMA_TRYgn
+trait_sub$LDMC_all<-trait_sub$LDMC_TRYgn
+
+## Amy Heim's dissertation
+## https://library2.smu.ca/handle/01/29843
+trait_sub$LDMC_all[trait_sub$binomial=="Aronia melanocarpa"]<-375.8
+
+## https://academic.oup.com/aob/article/118/6/1139/2418679
+## digitized from graph
+trait_sub$N_all[trait_sub$binomial=="Osmundastrum cinnamomeum"]<-4.056
+
+## https://www.sciencedirect.com/science/article/pii/S0048969720321355
+## calculated from control and 0 treatment in data
+trait_sub$N_all[trait_sub$binomial=="Scheuchzeria palustris"]<-2.879
+
+## https://link.springer.com/article/10.1007/s00442-006-0619-5
+trait_sub$LMA_all[trait_sub$binomial=="Sphagnum capillifolium"]<-10000/463.6
+# based on riparium
+trait_sub$LMA_all[trait_sub$binomial=="Sphagnum fallax"]<-10000/357.6
+# based on an overall average
+trait_sub$LMA_all[trait_sub$binomial=="Sphagnum papillosum"]<-10000/356.1
+trait_sub$LMA_all[trait_sub$binomial=="Sphagnum magellanicum"]<-10000/356.1
+
+## doi:10.1111/1365-2435.13883
+trait_sub$LDMC_all[trait_sub$binomial=="Sphagnum fallax"]<-1/(8.42+1)*1000
+trait_sub$LDMC_all[trait_sub$binomial=="Sphagnum magellanicum"]<-1/(16.04+1)*1000
+trait_sub$LDMC_all[trait_sub$binomial=="Sphagnum papillosum"]<-1/(10.26+1)*1000
+## based on fuscum
+trait_sub$LDMC_all[trait_sub$binomial=="Sphagnum capillifolium"]<-1/(8.96+1)*1000
+## capillifolium sect. acutifolia?? related to fuscum
+
+## LMA Polytrichum
+## https://www.sciencedirect.com/science/article/pii/S0269749109004680
+
+######################################
+## write data
+
 write.csv(trait_sub,"filled_trait_matrix.csv",row.names=F)

@@ -24,18 +24,19 @@ all_traits_site<-which(!is.na(trait_matrix$trait_n_perc) &
 all_traits_CABO<-which(!is.na(trait_matrix$N_CABO) & !is.na(trait_matrix$LMA_CABO) & !is.na(trait_matrix$LDMC_CABO))
 all_traits_sp<-which(!is.na(trait_matrix$N_TRYsp) & !is.na(trait_matrix$LMA_TRYsp) & !is.na(trait_matrix$LDMC_TRYsp))
 all_traits_gn<-which(!is.na(trait_matrix$N_TRYgn) & !is.na(trait_matrix$LMA_TRYgn) & !is.na(trait_matrix$LDMC_TRYgn))
-## allowing up to genus-level TRY traits (most permissive)
-trait_matrix<-trait_matrix[all_traits_gn,]
+all_traits<-which(!is.na(trait_matrix$N_all) & !is.na(trait_matrix$LMA_all) & !is.na(trait_matrix$LDMC_all))
+## keeping the most permissive set of trait values
+trait_matrix<-trait_matrix[all_traits,]
 
 ## log-transform LMA and N to reduce skewness
 ## since differences may be less important at the upper tail
-trait_matrix$logN_TRYgn<-log(trait_matrix$N_TRYgn)
-trait_matrix$logLMA_TRYgn<-log(trait_matrix$LMA_TRYgn)
+trait_matrix$logN_all<-log(trait_matrix$N_all)
+trait_matrix$logLMA_all<-log(trait_matrix$LMA_all)
 
 ## z-standardize all traits to give them equal emphasis
-trait_matrix$N_z<-(trait_matrix$logN_TRYgn-mean(trait_matrix$logN_TRYgn))/sd(trait_matrix$logN_TRYgn)
-trait_matrix$LMA_z<-(trait_matrix$logLMA_TRYgn-mean(trait_matrix$logLMA_TRYgn))/sd(trait_matrix$logLMA_TRYgn)
-trait_matrix$LDMC_z<-(trait_matrix$LDMC_TRYgn-mean(trait_matrix$LDMC_TRYgn))/sd(trait_matrix$LDMC_TRYgn)
+trait_matrix$N_z<-(trait_matrix$logN_all-mean(trait_matrix$logN_all))/sd(trait_matrix$logN_all)
+trait_matrix$LMA_z<-(trait_matrix$logLMA_all-mean(trait_matrix$logLMA_all))/sd(trait_matrix$logLMA_all)
+trait_matrix$LDMC_z<-(trait_matrix$LDMC_all-mean(trait_matrix$LDMC_all))/sd(trait_matrix$LDMC_all)
 
 #######################################
 ## read species matrix
