@@ -191,12 +191,16 @@ trait_sub$LDMC_all<-trait_sub$LDMC_TRYgn
 trait_sub$LDMC_all[trait_sub$binomial=="Aronia melanocarpa"]<-375.8
 
 ## https://academic.oup.com/aob/article/118/6/1139/2418679
-## digitized from graph
-trait_sub$N_all[trait_sub$binomial=="Osmundastrum cinnamomeum"]<-4.056
+## digitized from graph in July; sterile fronds only
+trait_sub$N_all[trait_sub$binomial=="Osmundastrum cinnamomeum"]<-2.551
 
 ## https://www.sciencedirect.com/science/article/pii/S0048969720321355
 ## calculated from control and 0 treatment in data
 trait_sub$N_all[trait_sub$binomial=="Scheuchzeria palustris"]<-2.879
+
+## https://www.sciencedirect.com/science/article/pii/S0304423816304216
+## based on lowest level to minimize effects of fertilization
+trait_sub$N_all[trait_sub$binomial=="Valerianella locusta"]<-3.608
 
 ## https://link.springer.com/article/10.1007/s00442-006-0619-5
 trait_sub$LMA_all[trait_sub$binomial=="Sphagnum capillifolium"]<-10000/463.6
