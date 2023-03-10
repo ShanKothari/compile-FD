@@ -126,7 +126,7 @@ trait_dist<-(trait_dist-min(trait_dist))/(max(trait_dist)-min(trait_dist))
 ####################################
 ## Scheiner FTD scripts
 
-source("C:/Users/kotha020/Documents/GitHub/DecomposingFD/R/AlphaFD.R")
+source("C:/Users/querc/Dropbox/GitHub/DecomposingFD/R/AlphaFD.R")
 
 ## apply Sam Scheiner's metrics
 FTD_list<-FTD.comm(tdmat=trait_dist,

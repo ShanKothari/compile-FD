@@ -2,7 +2,7 @@ library(spectrolab)
 
 setwd("C:/Users/querc/Dropbox/PostdocProjects/WallisFunctionalTraits/")
 
-trait_summ<-read.csv("TraitsSpecies/Species_traits_by_projects_selectedPlots.csv")
+trait_summ<-read.csv("TraitsSpecies/Species_traits_by_projects_allPriorities.csv")
 trait_sub<-trait_summ[,c("project",
                          "scientific_name",
                          "trait_leaf_mass_per_area_g_m2",
