@@ -134,7 +134,7 @@ for(i in 1:nrow(trait_sub)){
   }
   
   ## if N is missing, fill from CABO if possible
-  if(is.na(trait_sub$trait_n_perc[i]) & !is.na(CABO_sp_match)){
+  if(is.na(trait_sub$trait_n_perc[i])){
     trait_sub$N_CABOsp[i]<-ref_meta_sp_agg$Nmass[CABO_sp_match]
     trait_sub$N_TRYsp[i]<-ref_meta_sp_agg$Nmass[CABO_sp_match]
     trait_sub$N_CABOgn[i]<-ref_meta_sp_agg$Nmass[CABO_sp_match]
@@ -142,7 +142,7 @@ for(i in 1:nrow(trait_sub)){
   }
   
   ## if LMA is missing, fill from CABO if possible
-  if(is.na(trait_sub$trait_leaf_mass_per_area_g_m2[i]) & !is.na(CABO_sp_match)){
+  if(is.na(trait_sub$trait_leaf_mass_per_area_g_m2[i])){
     trait_sub$LMA_CABOsp[i]<-ref_meta_sp_agg$LMA[CABO_sp_match]*1000
     trait_sub$LMA_TRYsp[i]<-ref_meta_sp_agg$LMA[CABO_sp_match]*1000
     trait_sub$LMA_CABOgn[i]<-ref_meta_sp_agg$LMA[CABO_sp_match]*1000
@@ -150,7 +150,7 @@ for(i in 1:nrow(trait_sub)){
   }
   
   ## if LDMC is missing, fill from CABO if possible
-  if(is.na(trait_sub$trait_leaf_dry_matter_content_mg_g[i]) & !is.na(CABO_sp_match)){
+  if(is.na(trait_sub$trait_leaf_dry_matter_content_mg_g[i])){
     trait_sub$LDMC_CABOsp[i]<-ref_meta_sp_agg$LDMC[CABO_sp_match]
     trait_sub$LDMC_TRYsp[i]<-ref_meta_sp_agg$LDMC[CABO_sp_match]
     trait_sub$LDMC_CABOgn[i]<-ref_meta_sp_agg$LDMC[CABO_sp_match]
@@ -265,4 +265,4 @@ trait_sub$LDMC_all[trait_sub$binomial=="Sphagnum capillifolium"]<-1/(8.96+1)*100
 ######################################
 ## write data
 
-write.csv(trait_sub,"filled_trait_matrix2.csv",row.names=F)
+write.csv(trait_sub,"filled_trait_matrix.csv",row.names=F)
