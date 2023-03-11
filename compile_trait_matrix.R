@@ -18,14 +18,17 @@ trait_sub$species<-unlist(lapply(trait_sp_split,function(el) el[[2]]))
 trait_sub$species[which(trait_sub$species!=tolower(trait_sub$species))]<-NA
 trait_sub$binomial<-paste(trait_sub$genus,trait_sub$species,sep=" ")
 
-trait_sub$N_CABO<-trait_sub$trait_n_perc
+trait_sub$N_CABOsp<-trait_sub$trait_n_perc
 trait_sub$N_TRYsp<-trait_sub$trait_n_perc
+trait_sub$N_CABOgn<-trait_sub$trait_n_perc
 trait_sub$N_TRYgn<-trait_sub$trait_n_perc
-trait_sub$LMA_CABO<-trait_sub$trait_leaf_mass_per_area_g_m2
+trait_sub$LMA_CABOsp<-trait_sub$trait_leaf_mass_per_area_g_m2
 trait_sub$LMA_TRYsp<-trait_sub$trait_leaf_mass_per_area_g_m2
+trait_sub$LMA_CABOgn<-trait_sub$trait_leaf_mass_per_area_g_m2
 trait_sub$LMA_TRYgn<-trait_sub$trait_leaf_mass_per_area_g_m2
-trait_sub$LDMC_CABO<-trait_sub$trait_leaf_dry_matter_content_mg_g
+trait_sub$LDMC_CABOsp<-trait_sub$trait_leaf_dry_matter_content_mg_g
 trait_sub$LDMC_TRYsp<-trait_sub$trait_leaf_dry_matter_content_mg_g
+trait_sub$LDMC_CABOgn<-trait_sub$trait_leaf_dry_matter_content_mg_g
 trait_sub$LDMC_TRYgn<-trait_sub$trait_leaf_dry_matter_content_mg_g
 
 ###################################
@@ -34,14 +37,18 @@ trait_sub$LDMC_TRYgn<-trait_sub$trait_leaf_dry_matter_content_mg_g
 ref_traits<-readRDS("../FreshLeafModels/ProcessedSpectra/all_ref_and_traits.rds")
 ref_meta<-meta(ref_traits)
 
-ref_meta_agg<-aggregate(ref_meta[,c("LMA","LDMC","Nmass")],
+ref_meta_sp_agg<-aggregate(ref_meta[,c("LMA","LDMC","Nmass")],
                         by=list(ref_meta$species),
                         FUN=mean,na.rm=T)
 
-ref_meta_agg_sp<-strsplit(as.character(ref_meta_agg$Group.1),split=" ")
-ref_meta_agg$genus<-unlist(lapply(ref_meta_agg_sp,function(el) el[[1]]))
-ref_meta_agg$species<-unlist(lapply(ref_meta_agg_sp,function(el) el[[2]]))
-ref_meta_agg$binomial<-paste(ref_meta_agg$genus,ref_meta_agg$species,sep=" ")
+ref_meta_sp_agg_split<-strsplit(as.character(ref_meta_sp_agg$Group.1),split=" ")
+ref_meta_sp_agg$genus<-unlist(lapply(ref_meta_sp_agg_split,function(el) el[[1]]))
+ref_meta_sp_agg$species<-unlist(lapply(ref_meta_sp_agg_split,function(el) el[[2]]))
+ref_meta_sp_agg$binomial<-paste(ref_meta_sp_agg$genus,ref_meta_sp_agg$species,sep=" ")
+
+ref_meta_gn_agg<-aggregate(ref_meta[,c("LMA","LDMC","Nmass")],
+                           by=list(ref_meta$latin.genus),
+                           FUN=mean,na.rm=T)
 
 ###################################
 ## process additional SLA data from TRY
@@ -121,36 +128,40 @@ TRY_LDMC$binomial<-paste(TRY_LDMC$genus,TRY_LDMC$species,sep=" ")
 
 for(i in 1:nrow(trait_sub)){
   
-  CABO_match<-match(trait_sub$scientific_name[i],ref_meta_agg$Group.1)
-  if(is.na(CABO_match)){
-    CABO_match<-match(trait_sub$binomial[i],ref_meta_agg$binomial)
+  CABO_sp_match<-match(trait_sub$scientific_name[i],ref_meta_sp_agg$Group.1)
+  if(is.na(CABO_sp_match)){
+    CABO_sp_match<-match(trait_sub$binomial[i],ref_meta_sp_agg$binomial)
   }
   
   ## if N is missing, fill from CABO if possible
-  if(is.na(trait_sub$trait_n_perc[i]) & !is.na(CABO_match)){
-    trait_sub$N_CABO[i]<-ref_meta_agg$Nmass[CABO_match]
-    trait_sub$N_TRYsp[i]<-ref_meta_agg$Nmass[CABO_match]
-    trait_sub$N_TRYgn[i]<-ref_meta_agg$Nmass[CABO_match]
+  if(is.na(trait_sub$trait_n_perc[i]) & !is.na(CABO_sp_match)){
+    trait_sub$N_CABOsp[i]<-ref_meta_sp_agg$Nmass[CABO_sp_match]
+    trait_sub$N_TRYsp[i]<-ref_meta_sp_agg$Nmass[CABO_sp_match]
+    trait_sub$N_CABOgn[i]<-ref_meta_sp_agg$Nmass[CABO_sp_match]
+    trait_sub$N_TRYgn[i]<-ref_meta_sp_agg$Nmass[CABO_sp_match]
   }
   
   ## if LMA is missing, fill from CABO if possible
-  if(is.na(trait_sub$trait_leaf_mass_per_area_g_m2[i]) & !is.na(CABO_match)){
-    trait_sub$LMA_CABO[i]<-ref_meta_agg$LMA[CABO_match]*1000
-    trait_sub$LMA_TRYsp[i]<-ref_meta_agg$LMA[CABO_match]*1000
-    trait_sub$LMA_TRYgn[i]<-ref_meta_agg$LMA[CABO_match]*1000
+  if(is.na(trait_sub$trait_leaf_mass_per_area_g_m2[i]) & !is.na(CABO_sp_match)){
+    trait_sub$LMA_CABOsp[i]<-ref_meta_sp_agg$LMA[CABO_sp_match]*1000
+    trait_sub$LMA_TRYsp[i]<-ref_meta_sp_agg$LMA[CABO_sp_match]*1000
+    trait_sub$LMA_CABOgn[i]<-ref_meta_sp_agg$LMA[CABO_sp_match]*1000
+    trait_sub$LMA_TRYgn[i]<-ref_meta_sp_agg$LMA[CABO_sp_match]*1000
   }
   
   ## if LDMC is missing, fill from CABO if possible
-  if(is.na(trait_sub$trait_leaf_dry_matter_content_mg_g[i]) & !is.na(CABO_match)){
-    trait_sub$LDMC_CABO[i]<-ref_meta_agg$LDMC[CABO_match]
-    trait_sub$LDMC_TRYsp[i]<-ref_meta_agg$LDMC[CABO_match]
-    trait_sub$LDMC_TRYgn[i]<-ref_meta_agg$LDMC[CABO_match]
+  if(is.na(trait_sub$trait_leaf_dry_matter_content_mg_g[i]) & !is.na(CABO_sp_match)){
+    trait_sub$LDMC_CABOsp[i]<-ref_meta_sp_agg$LDMC[CABO_sp_match]
+    trait_sub$LDMC_TRYsp[i]<-ref_meta_sp_agg$LDMC[CABO_sp_match]
+    trait_sub$LDMC_CABOgn[i]<-ref_meta_sp_agg$LDMC[CABO_sp_match]
+    trait_sub$LDMC_TRYgn[i]<-ref_meta_sp_agg$LDMC[CABO_sp_match]
   }
 
   ## now if N_TRYsp is still missing we fill from TRY
   if(is.na(trait_sub$N_TRYsp[i])){
     TRY_N_matchsp<-which(TRY_N$binomial==trait_sub$binomial[i])
     trait_sub$N_TRYsp[i]<-mean(TRY_N$StdValue[TRY_N_matchsp]/10,na.rm=T)
+    trait_sub$N_CABOgn[i]<-mean(TRY_N$StdValue[TRY_N_matchsp]/10,na.rm=T)
     trait_sub$N_TRYgn[i]<-mean(TRY_N$StdValue[TRY_N_matchsp]/10,na.rm=T)
   }
   
@@ -158,6 +169,7 @@ for(i in 1:nrow(trait_sub)){
   if(is.na(trait_sub$LMA_TRYsp[i])){
     TRY_SLA_matchsp<-which(TRY_SLA$binomial==trait_sub$binomial[i])
     trait_sub$LMA_TRYsp[i]<-mean(1000/TRY_SLA$StdValue[TRY_SLA_matchsp],na.rm=T)
+    trait_sub$LMA_CABOgn[i]<-mean(1000/TRY_SLA$StdValue[TRY_SLA_matchsp],na.rm=T)
     trait_sub$LMA_TRYgn[i]<-mean(1000/TRY_SLA$StdValue[TRY_SLA_matchsp],na.rm=T)
   }
   
@@ -165,7 +177,28 @@ for(i in 1:nrow(trait_sub)){
   if(is.na(trait_sub$LDMC_TRYsp[i])){
     TRY_LDMC_matchsp<-which(TRY_LDMC$binomial==trait_sub$binomial[i])
     trait_sub$LDMC_TRYsp[i]<-mean(1000*TRY_LDMC$StdValue[TRY_LDMC_matchsp],na.rm=T)
+    trait_sub$LDMC_CABOgn[i]<-mean(1000*TRY_LDMC$StdValue[TRY_LDMC_matchsp],na.rm=T)
     trait_sub$LDMC_TRYgn[i]<-mean(1000*TRY_LDMC$StdValue[TRY_LDMC_matchsp],na.rm=T)
+  }
+  
+  CABO_gn_match<-match(trait_sub$genus[i],ref_meta_gn_agg$Group.1)
+  
+  ## if N is missing, fill from CABO if possible
+  if(is.na(trait_sub$N_CABOgn[i])){
+    trait_sub$N_CABOgn[i]<-ref_meta_gn_agg$Nmass[CABO_gn_match]
+    trait_sub$N_TRYgn[i]<-ref_meta_gn_agg$Nmass[CABO_gn_match]
+  }
+  
+  ## if LMA is missing, fill from CABO if possible
+  if(is.na(trait_sub$LMA_CABOgn[i])){
+    trait_sub$LMA_CABOgn[i]<-ref_meta_gn_agg$LMA[CABO_gn_match]*1000
+    trait_sub$LMA_TRYgn[i]<-ref_meta_gn_agg$LMA[CABO_gn_match]*1000
+  }
+  
+  ## if LDMC is missing, fill from CABO if possible
+  if(is.na(trait_sub$LDMC_CABOgn[i])){
+    trait_sub$LDMC_CABOgn[i]<-ref_meta_gn_agg$LDMC[CABO_gn_match]
+    trait_sub$LDMC_TRYgn[i]<-ref_meta_gn_agg$LDMC[CABO_gn_match]
   }
   
   ## now if N_TRYgn is still missing we fill from TRY
@@ -232,4 +265,4 @@ trait_sub$LDMC_all[trait_sub$binomial=="Sphagnum capillifolium"]<-1/(8.96+1)*100
 ######################################
 ## write data
 
-write.csv(trait_sub,"filled_trait_matrix.csv",row.names=F)
+write.csv(trait_sub,"filled_trait_matrix2.csv",row.names=F)
