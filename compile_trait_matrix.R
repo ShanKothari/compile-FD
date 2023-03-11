@@ -38,6 +38,11 @@ ref_meta_agg<-aggregate(ref_meta[,c("LMA","LDMC","Nmass")],
                         by=list(ref_meta$species),
                         FUN=mean,na.rm=T)
 
+ref_meta_agg_sp<-strsplit(as.character(ref_meta_agg$Group.1),split=" ")
+ref_meta_agg$genus<-unlist(lapply(ref_meta_agg_sp,function(el) el[[1]]))
+ref_meta_agg$species<-unlist(lapply(ref_meta_agg_sp,function(el) el[[2]]))
+ref_meta_agg$binomial<-paste(ref_meta_agg$genus,ref_meta_agg$species,sep=" ")
+
 ###################################
 ## process additional SLA data from TRY
 
@@ -117,6 +122,9 @@ TRY_LDMC$binomial<-paste(TRY_LDMC$genus,TRY_LDMC$species,sep=" ")
 for(i in 1:nrow(trait_sub)){
   
   CABO_match<-match(trait_sub$scientific_name[i],ref_meta_agg$Group.1)
+  if(is.na(CABO_match)){
+    CABO_match<-match(trait_sub$binomial[i],ref_meta_agg$binomial)
+  }
   
   ## if N is missing, fill from CABO if possible
   if(is.na(trait_sub$trait_n_perc[i]) & !is.na(CABO_match)){
