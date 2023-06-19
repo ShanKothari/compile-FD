@@ -252,11 +252,11 @@ trait_sub$LMA_all[trait_sub$binomial=="Sphagnum papillosum"]<-10000/356.1
 trait_sub$LMA_all[trait_sub$binomial=="Sphagnum magellanicum"]<-10000/356.1
 
 ## doi:10.1111/1365-2435.13883
-trait_sub$LDMC_all[trait_sub$binomial=="Sphagnum fallax"]<-1/(8.42+1)*1000
-trait_sub$LDMC_all[trait_sub$binomial=="Sphagnum magellanicum"]<-1/(16.04+1)*1000
-trait_sub$LDMC_all[trait_sub$binomial=="Sphagnum papillosum"]<-1/(10.26+1)*1000
+trait_sub$LDMC_all[trait_sub$binomial=="Sphagnum fallax"]<-1/8.42*1000
+trait_sub$LDMC_all[trait_sub$binomial=="Sphagnum magellanicum"]<-1/16.04*1000
+trait_sub$LDMC_all[trait_sub$binomial=="Sphagnum papillosum"]<-1/10.26*1000
 ## based on fuscum
-trait_sub$LDMC_all[trait_sub$binomial=="Sphagnum capillifolium"]<-1/(8.96+1)*1000
+trait_sub$LDMC_all[trait_sub$binomial=="Sphagnum capillifolium"]<-1/8.96*1000
 ## capillifolium sect. acutifolia?? related to fuscum
 
 ## LMA Polytrichum

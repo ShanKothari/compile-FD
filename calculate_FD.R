@@ -68,7 +68,7 @@ sp_matrix$binomial<-paste(sp_matrix$genus,sp_matrix$species,sep=" ")
 ## separate Phragmites varieties again
 sp_matrix$binomial[sp_matrix$scientific_name=="Phragmites australis (Cavanilles) Trinius ex Steudel subsp. australis"]<-"Phragmites australis var. australis"
 
-## aggregate by binomal and plot_field_id within project
+## aggregate by binomial and plot_field_id within project
 ## this is really ONLY for Sanicula crassicaulis, of which
 ## two varieties are found in the same plot
 ## (so we're just aggregating them within that plot)
